@@ -1,5 +1,9 @@
 
 class LottoGenerator extends HTMLElement {
+  static get observedAttributes() {
+    return ['theme'];
+  }
+
   constructor() {
     super();
     const shadow = this.attachShadow({ mode: 'open' });
@@ -19,10 +23,27 @@ class LottoGenerator extends HTMLElement {
     const style = document.createElement('style');
     style.textContent = `
       :host {
-        --color-primary: #6a11cb;
-        --color-secondary: #2575fc;
-        --color-accent: #ff55a5;
-        --color-text: #ffffff;
+        --color-primary-dark: #6a11cb;
+        --color-secondary-dark: #2575fc;
+        --color-accent-dark: #ff55a5;
+        --color-text-dark: #ffffff;
+
+        --color-primary-light: #f0f0f0;
+        --color-secondary-light: #e0e0e0;
+        --color-accent-light: #007bff;
+        --color-text-light: #333333;
+
+        --color-primary: var(--color-primary-dark);
+        --color-secondary: var(--color-secondary-dark);
+        --color-accent: var(--color-accent-dark);
+        --color-text: var(--color-text-dark);
+      }
+      
+      :host([theme="light"]) {
+        --color-primary: var(--color-primary-light);
+        --color-secondary: var(--color-secondary-light);
+        --color-accent: var(--color-accent-light);
+        --color-text: var(--color-text-light);
       }
 
       .lotto-container {
@@ -38,6 +59,11 @@ class LottoGenerator extends HTMLElement {
         margin: 0;
         margin-bottom: 1rem;
         text-shadow: 0 0 10px rgba(0,0,0,0.5), 0 0 20px rgba(0,0,0,0.3);
+        color: var(--color-text);
+      }
+      
+      :host([theme="light"]) h1 {
+        text-shadow: none;
       }
 
       .number-display {
@@ -58,7 +84,7 @@ class LottoGenerator extends HTMLElement {
         border-radius: 50%;
         font-size: 2rem;
         font-weight: 600;
-        color: var(--color-text);
+        color: #fff;
         box-shadow: 0 10px 20px rgba(0,0,0,0.3), inset 0 -5px 10px rgba(0,0,0,0.4);
         transform-style: preserve-3d;
         transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.5s ease;
@@ -126,6 +152,23 @@ class LottoGenerator extends HTMLElement {
     const colors = ['#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722'];
     return colors[Math.floor(number / 4)];
   }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'theme') {
+      // Nothing to do here, the theme is applied via CSS :host([theme="light"])
+    }
+  }
 }
 
 customElements.define('lotto-generator', LottoGenerator);
+
+const themeSwitcher = document.getElementById('theme-switcher');
+themeSwitcher.addEventListener('click', () => {
+  document.body.classList.toggle('light-mode');
+  const lottoGenerator = document.querySelector('lotto-generator');
+  if (document.body.classList.contains('light-mode')) {
+    lottoGenerator.setAttribute('theme', 'light');
+  } else {
+    lottoGenerator.removeAttribute('theme');
+  }
+});

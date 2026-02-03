@@ -2,15 +2,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 :root {
-    --color-primary: #6a11cb;
-    --color-secondary: #2575fc;
-    --color-accent: #ff55a5;
-    --color-text: #ffffff;
-    --color-bg: #121212;
+    --color-primary-dark: #6a11cb;
+    --color-secondary-dark: #2575fc;
+    --color-accent-dark: #ff55a5;
+    --color-text-dark: #ffffff;
+    --color-bg-dark: #121212;
+
+    --color-primary-light: #f0f0f0;
+    --color-secondary-light: #e0e0e0;
+    --color-accent-light: #007bff;
+    --color-text-light: #333333;
+    --color-bg-light: #ffffff;
+
     --font-family: 'Poppins', sans-serif;
 }
 
 body {
+    --color-primary: var(--color-primary-dark);
+    --color-secondary: var(--color-secondary-dark);
+    --color-accent: var(--color-accent-dark);
+    --color-text: var(--color-text-dark);
+    --color-bg: var(--color-bg-dark);
+
     font-family: var(--font-family);
     margin: 0;
     height: 100vh;
@@ -20,6 +33,28 @@ body {
     color: var(--color-text);
     position: relative;
     overflow: hidden;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+body.light-mode {
+    --color-primary: var(--color-primary-light);
+    --color-secondary: var(--color-secondary-light);
+    --color-accent: var(--color-accent-light);
+    --color-text: var(--color-text-light);
+    --color-bg: var(--color-bg-light);
+}
+
+#theme-switcher {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: 1px solid var(--color-text);
+    background-color: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    z-index: 100;
 }
 
 body::after {
@@ -43,4 +78,10 @@ body::after {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.light-mode .main-container {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2), 0 5px 15px rgba(0,0,0,0.1);
 }
