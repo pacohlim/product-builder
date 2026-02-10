@@ -12,7 +12,20 @@
     <main class="main-container">
         <dinner-recommender></dinner-recommender>
         <p><a href="contact.html" style="color: var(--color-accent); text-decoration: none; font-weight: bold; margin-top: 2rem; display: inline-block;">제휴 문의</a></p>
+        <div id="disqus_thread" style="margin-top: 2rem; width: 100%;"></div>
     </main>
     <script src="main.js"></script>
+    <script>
+        var disqus_config = function () {
+            this.page.url = 'https://pacohlim.github.io/product-builder/';
+            this.page.identifier = 'dinner-recommender-homepage';
+        };
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://product-builder-7vivvasrn7.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
 </body>
 </html>
