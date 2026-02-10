@@ -169,7 +169,6 @@ class DinnerRecommender extends HTMLElement {
     
     const menuImage = document.createElement('img');
     menuImage.setAttribute('class', 'menu-image');
-    menuImage.src = selectedMenu.imageUrl;
     menuImage.alt = selectedMenu.name;
 
     const menuName = document.createElement('div');
@@ -178,11 +177,18 @@ class DinnerRecommender extends HTMLElement {
 
     menuItem.appendChild(menuImage);
     menuItem.appendChild(menuName);
-    display.appendChild(menuItem);
-
-    setTimeout(() => {
-      menuItem.style.transform = 'scale(1)';
-    }, 100);
+    
+    // Preload the image
+    const preloader = new Image();
+    preloader.onload = () => {
+      // Once loaded, set the src for the visible image and show the item
+      menuImage.src = preloader.src;
+      display.appendChild(menuItem);
+      setTimeout(() => {
+        menuItem.style.transform = 'scale(1)';
+      }, 100);
+    };
+    preloader.src = selectedMenu.imageUrl;
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
