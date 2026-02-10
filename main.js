@@ -72,22 +72,33 @@ class DinnerRecommender extends HTMLElement {
         justify-content: center;
         gap: 1.5rem;
         margin: 2rem 0;
-        min-height: 100px;
+        min-height: 350px;
+        width: 400px;
       }
 
       .menu-item {
-        padding: 2rem 4rem;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        border-radius: 20px;
-        font-size: 2.5rem;
-        font-weight: 600;
-        color: #fff;
-        background-color: #e91e63;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.3), inset 0 -5px 10px rgba(0,0,0,0.4);
         transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         transform: scale(0);
+      }
+
+      .menu-image {
+        width: 300px;
+        height: 300px;
+        border-radius: 20px;
+        object-fit: cover;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3), 0 5px 15px rgba(0,0,0,0.2);
+      }
+
+      .menu-name {
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: var(--color-text);
+        margin-top: 1.5rem;
+        text-shadow: 0 2px 5px rgba(0,0,0,0.5);
       }
 
       button {
@@ -122,10 +133,26 @@ class DinnerRecommender extends HTMLElement {
     container.appendChild(button);
 
     this.menus = [
-      "김치찌개", "된장찌개", "부대찌개", "비빔밥", "불고기", 
-      "떡볶이", "순대", "라면", "칼국수", "수제비", 
-      "피자", "햄버거", "파스타", "스테이크", "초밥", 
-      "돈까스", "우동", "쌀국수", "카레", "짜장면"
+      { name: "김치찌개", imageUrl: "https://source.unsplash.com/400x300/?kimchi-jjigae" },
+      { name: "된장찌개", imageUrl: "https://source.unsplash.com/400x300/?doenjang-jjigae" },
+      { name: "부대찌개", imageUrl: "https://source.unsplash.com/400x300/?budae-jjigae" },
+      { name: "비빔밥", imageUrl: "https://source.unsplash.com/400x300/?bibimbap" },
+      { name: "불고기", imageUrl: "https://source.unsplash.com/400x300/?bulgogi" },
+      { name: "떡볶이", imageUrl: "https://source.unsplash.com/400x300/?tteokbokki" },
+      { name: "순대", imageUrl: "https://source.unsplash.com/400x300/?sundae,korean+food" },
+      { name: "라면", imageUrl: "https://source.unsplash.com/400x300/?ramen" },
+      { name: "칼국수", imageUrl: "https://source.unsplash.com/400x300/?kalguksu" },
+      { name: "수제비", imageUrl: "https://source.unsplash.com/400x300/?sujebi" },
+      { name: "피자", imageUrl: "https://source.unsplash.com/400x300/?pizza" },
+      { name: "햄버거", imageUrl: "https://source.unsplash.com/400x300/?hamburger" },
+      { name: "파스타", imageUrl: "https://source.unsplash.com/400x300/?pasta" },
+      { name: "스테이크", imageUrl: "https://source.unsplash.com/400x300/?steak" },
+      { name: "초밥", imageUrl: "https://source.unsplash.com/400x300/?sushi" },
+      { name: "돈까스", imageUrl: "https://source.unsplash.com/400x300/?tonkatsu" },
+      { name: "우동", imageUrl: "https://source.unsplash.com/400x300/?udon" },
+      { name: "쌀국수", imageUrl: "https://source.unsplash.com/400x300/?pho" },
+      { name: "카레", imageUrl: "https://source.unsplash.com/400x300/?curry" },
+      { name: "짜장면", imageUrl: "https://source.unsplash.com/400x300/?jjajangmyeon" }
     ];
 
     button.addEventListener('click', () => this.recommendMenu(display));
@@ -139,8 +166,18 @@ class DinnerRecommender extends HTMLElement {
 
     const menuItem = document.createElement('div');
     menuItem.setAttribute('class', 'menu-item');
-    menuItem.textContent = selectedMenu;
     
+    const menuImage = document.createElement('img');
+    menuImage.setAttribute('class', 'menu-image');
+    menuImage.src = selectedMenu.imageUrl;
+    menuImage.alt = selectedMenu.name;
+
+    const menuName = document.createElement('div');
+    menuName.setAttribute('class', 'menu-name');
+    menuName.textContent = selectedMenu.name;
+
+    menuItem.appendChild(menuImage);
+    menuItem.appendChild(menuName);
     display.appendChild(menuItem);
 
     setTimeout(() => {
