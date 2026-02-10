@@ -1,5 +1,5 @@
 
-class LottoGenerator extends HTMLElement {
+class DinnerRecommender extends HTMLElement {
   static get observedAttributes() {
     return ['theme'];
   }
@@ -9,16 +9,16 @@ class LottoGenerator extends HTMLElement {
     const shadow = this.attachShadow({ mode: 'open' });
 
     const container = document.createElement('div');
-    container.setAttribute('class', 'lotto-container');
+    container.setAttribute('class', 'dinner-container');
 
     const title = document.createElement('h1');
-    title.textContent = 'Lotto Number Generator';
+    title.textContent = '오늘 저녁 뭐 먹지?';
 
     const display = document.createElement('div');
-    display.setAttribute('class', 'number-display');
+    display.setAttribute('class', 'menu-display');
 
     const button = document.createElement('button');
-    button.textContent = 'Generate Numbers';
+    button.textContent = '메뉴 추천!';
 
     const style = document.createElement('style');
     style.textContent = `
@@ -46,7 +46,7 @@ class LottoGenerator extends HTMLElement {
         --color-text: var(--color-text-light);
       }
 
-      .lotto-container {
+      .dinner-container {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -66,29 +66,28 @@ class LottoGenerator extends HTMLElement {
         text-shadow: none;
       }
 
-      .number-display {
+      .menu-display {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         gap: 1.5rem;
         margin: 2rem 0;
-        perspective: 800px;
+        min-height: 100px;
       }
 
-      .number-ball {
-        width: 80px;
-        height: 80px;
+      .menu-item {
+        padding: 2rem 4rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 50%;
-        font-size: 2rem;
+        border-radius: 20px;
+        font-size: 2.5rem;
         font-weight: 600;
         color: #fff;
+        background-color: #e91e63;
         box-shadow: 0 10px 20px rgba(0,0,0,0.3), inset 0 -5px 10px rgba(0,0,0,0.4);
-        transform-style: preserve-3d;
-        transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.5s ease;
-        transform: rotateY(-180deg) scale(0.5);
+        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transform: scale(0);
       }
 
       button {
@@ -122,53 +121,49 @@ class LottoGenerator extends HTMLElement {
     container.appendChild(display);
     container.appendChild(button);
 
-    button.addEventListener('click', () => this.generateNumbers(display));
-    this.generateNumbers(display);
+    this.menus = [
+      "김치찌개", "된장찌개", "부대찌개", "비빔밥", "불고기", 
+      "떡볶이", "순대", "라면", "칼국수", "수제비", 
+      "피자", "햄버거", "파스타", "스테이크", "초밥", 
+      "돈까스", "우동", "쌀국수", "카레", "짜장면"
+    ];
+
+    button.addEventListener('click', () => this.recommendMenu(display));
+    this.recommendMenu(display);
   }
 
-  generateNumbers(display) {
+  recommendMenu(display) {
     display.innerHTML = '';
-    const numbers = new Set();
-    while (numbers.size < 6) {
-      numbers.add(Math.floor(Math.random() * 45) + 1);
-    }
+    const randomIndex = Math.floor(Math.random() * this.menus.length);
+    const selectedMenu = this.menus[randomIndex];
 
-    const sortedNumbers = Array.from(numbers).sort((a, b) => a - b);
+    const menuItem = document.createElement('div');
+    menuItem.setAttribute('class', 'menu-item');
+    menuItem.textContent = selectedMenu;
+    
+    display.appendChild(menuItem);
 
-    sortedNumbers.forEach((number, index) => {
-        const ball = document.createElement('div');
-        ball.setAttribute('class', 'number-ball');
-        ball.textContent = number;
-        ball.style.backgroundColor = this.getColor(number);
-        display.appendChild(ball);
-
-        setTimeout(() => {
-          ball.style.transform = 'rotateY(0deg) scale(1)';
-        }, 100 * (index + 1));
-    });
-  }
-
-  getColor(number) {
-    const colors = ['#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722'];
-    return colors[Math.floor(number / 4)];
+    setTimeout(() => {
+      menuItem.style.transform = 'scale(1)';
+    }, 100);
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'theme') {
-      // Nothing to do here, the theme is applied via CSS :host([theme="light"])
+      // Theme application is handled by CSS :host([theme="light"])
     }
   }
 }
 
-customElements.define('lotto-generator', LottoGenerator);
+customElements.define('dinner-recommender', DinnerRecommender);
 
 const themeSwitcher = document.getElementById('theme-switcher');
 themeSwitcher.addEventListener('click', () => {
   document.body.classList.toggle('light-mode');
-  const lottoGenerator = document.querySelector('lotto-generator');
+  const dinnerRecommender = document.querySelector('dinner-recommender');
   if (document.body.classList.contains('light-mode')) {
-    lottoGenerator.setAttribute('theme', 'light');
+    dinnerRecommender.setAttribute('theme', 'light');
   } else {
-    lottoGenerator.removeAttribute('theme');
+    dinnerRecommender.removeAttribute('theme');
   }
 });
